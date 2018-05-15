@@ -4,10 +4,58 @@ if (alerted != 'yes') {
     sessionStorage.setItem('alerted','yes');
 }
 
-(function SNAKE() {
+(function () {
 
-    var verif = 0;
+    var storageCleanerButton = document.getElementById("storage-clear");
+    storageCleanerButton.addEventListener("click", clearScore, false);
 
+    function clearScore() {
+        localStorage.clear();
+        var rankList = document.getElementById("rank-list");
+        rankList.innerHTML = "Top Five";
+    }
+
+    (function loadTopFiveScores() {
+        function Pair(key, value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        var allScores = [];
+        for (var prop in localStorage) {
+            allScores.push(new Pair(prop, localStorage[prop]));
+        }
+
+        // sort the scores
+        for (var i = 0; i < allScores.length - 1; i++) {
+            var maxScoreIndex = i;
+            for (var j = i + 1; j < allScores.length; j++) {
+                if (parseInt(allScores[j].value) > parseInt(allScores[maxScoreIndex].value)) {
+                    maxScoreIndex = j;
+                }
+            }
+
+            var temp = allScores[i];
+            allScores[i] = allScores[maxScoreIndex];
+            allScores[maxScoreIndex] = temp;
+        }
+
+        // load the top five scores
+        var rankList = document.getElementById("rank-list");
+        var length;
+        if (allScores.length < 5) {
+            length = allScores.length;
+        }
+        else {
+            length = 5;
+        }
+
+        for (var i = 0; i < length; i++) {
+            var div = document.createElement("div");
+            div.innerHTML = allScores[i].key + ": " + allScores[i].value;
+            rankList.appendChild(div);
+        }
+    })();
 
     function Queue() {
         var that = this;
@@ -190,13 +238,19 @@ if (alerted != 'yes') {
         ctx.restore();
     }
 
+    function saveScore(score){
+        var name = prompt("Game Over!\nEnter nickname:");
+        if(localStorage[name]){
+            if(localStorage[name] < score){
+                localStorage[name] = score;
+            }
+        }
+        else
+            localStorage[name] = score;
+    }
 
     function restartGame() {
         document.location.reload();
-        if(verif == 0) {
-            alert("GAME OVER! Press OK to try again...");
-            verif++;
-        }
 
     }
 
@@ -234,14 +288,14 @@ if (alerted != 'yes') {
     function run(ctx, snake, width, height) {
         var nextHead = snake.getNextHead();
         var snakeBody = snake.snakeBody;
-        var verify = 0;
 
         // self collision
         for (var i = 0; i < snakeBody.length(); i++) {
             var elem = snakeBody.elementAt(i);
             if (elem.x === nextHead.x && elem.y === nextHead.y) {
-          //      alert("GAME OVER");
-            restartGame();
+                //      alert("GAME OVER");
+                saveScore(score);
+                restartGame();
             }
         }
 
@@ -250,6 +304,7 @@ if (alerted != 'yes') {
             nextHead.x >= width - 10 ||
             nextHead.y <= 0 ||
             nextHead.y >= height - 10) {
+            saveScore(score);
             restartGame();
         }
 
