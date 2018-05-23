@@ -21,24 +21,11 @@ if (alerted != 'yes') {
             this.value = value;
         }
 
-        var allScores = [];
-        for (var prop in localStorage) {
-            allScores.push(new Pair(prop, localStorage[prop]));
-        }
+        var tree = new Tree('start');
 
-        // sort the scores
-        for (var i = 0; i < allScores.length - 1; i++) {
-            var maxScoreIndex = i;
-            for (var j = i + 1; j < allScores.length; j++) {
-                if (parseInt(allScores[j].value) > parseInt(allScores[maxScoreIndex].value)) {
-                    maxScoreIndex = j;
-                }
-            }
+        tree._root.children.push(new Node('localStorage[name]'))
 
-            var temp = allScores[i];
-            allScores[i] = allScores[maxScoreIndex];
-            allScores[maxScoreIndex] = temp;
-        }
+
 
         // load the top five scores
         var rankList = document.getElementById("rank-list");
@@ -239,14 +226,10 @@ if (alerted != 'yes') {
     }
 
     function saveScore(score){
-        var name = prompt("Game Over!\nEnter nickname:");
-        if(localStorage[name]){
-            if(localStorage[name] < score){
-                localStorage[name] = score;
-            }
-        }
-        else
-            localStorage[name] = score;
+        tree._root.children.push(new Node('name'));
+        tree._root.children[1].parent = tree;
+        tree._root.children[0].children.push(new Node(score));
+        tree._root.children[0].children[0].parent = tree._root.children[0];
     }
 
     function restartGame() {
@@ -263,6 +246,7 @@ if (alerted != 'yes') {
     var snake = new Snake(5, 5, 5);
     var food = new Food(width, height);
     var score = 0;
+    var tree = new Tree('root');
 
     var scoreDiv = document.getElementById("score");
     scoreDiv.style.fontWeight = "bold";
