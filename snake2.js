@@ -20,29 +20,17 @@ if (alerted != 'yes') {
             this.key = key;
             this.value = value;
         }
-
-        var tree = new Tree('start');
-
         tree._root.children.push(new Node('localStorage[name]'))
 
-
-
-        // load the top five scores
         var rankList = document.getElementById("rank-list");
-        var length;
-        if (allScores.length < 5) {
-            length = allScores.length;
-        }
-        else {
-            length = 5;
-        }
 
-        for (var i = 0; i < length; i++) {
+        for(var i = 0; i < length; i++) {
             var div = document.createElement("div");
-            div.innerHTML = allScores[i].key + ": " + allScores[i].value;
+            div.innerHTML = tree._root.children[i] = tree;
             rankList.appendChild(div);
-        }
-    })();
+
+
+        }})();
 
     function Queue() {
         var that = this;
@@ -225,11 +213,36 @@ if (alerted != 'yes') {
         ctx.restore();
     }
 
+    //Tree traversing
+    Tree.prototype.traverseDF = function(callback) {
+
+        // this is a recurse and immediately-invoking function
+        (function recurse(currentNode) {
+            // step 2
+            for (var i = 0, length = currentNode.children.length; i < length; i++) {
+                // step 3
+                recurse(currentNode.children[i]);
+            }
+
+            // step 4
+            callback(currentNode);
+
+            // step 1
+        })(this._root);
+
+    };
+
+
     function saveScore(score){
         tree._root.children.push(new Node('name'));
         tree._root.children[1].parent = tree;
         tree._root.children[0].children.push(new Node(score));
         tree._root.children[0].children[0].parent = tree._root.children[0];
+
+        tree.traverseDF(function(node) {
+            console.log(node.data)
+        });
+
     }
 
     function restartGame() {
