@@ -1,3 +1,4 @@
+
 function Node(data) {
     this.data = data;
     this.parent = null;
@@ -424,14 +425,16 @@ if (alerted != 'yes') {
                 snake.head = snakeNextHead;
                 food = new Food(width, height);
                 score += 100;
-                scoreDiv.innerHTML = "Score: " + score + highScore;			    
+                scoreDiv.innerHTML = "Score: " + score;			    
 
-                var HighScore = localStorage.getItem('highScore');                
+                var HighScoreDiv = localStorage.getItem('HighScore') || 0;
+  
                 
 				if (score > HighScore) {
-  				highScore = parseInt(score);
-                localStorage.setItem('highScore', highScore);
+  				HighScore = parseInt(score);
+                localStorage.setItem('HighScore', HighScoreDiv);
 				}
+                HighScoreDiv.innerHTML = "High Score: " + HighScore;
 	
                 
                 clearScore();
