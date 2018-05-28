@@ -441,6 +441,10 @@ if (alerted != 'yes') {
 
                         rankList.appendChild(div);
                     }
+                    if(div > highDiv){
+                        highDiv = div;
+                        highDiv.innerHTML = "High Score: " + highDiv;
+                    }
                 });
 
                 break;
