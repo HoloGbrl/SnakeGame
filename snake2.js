@@ -1,26 +1,3 @@
-<!DOCTYPE html>
-
-<html>
-<head>
-    <title>Snake</title>
-    <style>
-        #rank-list {
-            float: right;
-            background-color: #dedede;
-            font-weight: bold;
-        }
-        #storage-clear {
-            float: right;
-        }
-    </style>
-</head>
-<body>
-<div id="rank-list">Score history</div>
-<button id="storage-clear">Clear Score</button>
-<div id="score">Score: </div>
-<canvas width="400" height="400"></canvas>
-<script>
-
 function Node(data) {
     this.data = data;
     this.parent = null;
@@ -424,7 +401,6 @@ if (alerted != 'yes') {
         for (var i = 0; i < snakeBody.length(); i++) {
             var elem = snakeBody.elementAt(i);
             if (elem.x === nextHead.x && elem.y === nextHead.y) {
-                //      alert("GAME OVER");
                 saveScore(score);
                 restartGame();
             }
@@ -448,8 +424,17 @@ if (alerted != 'yes') {
                 snake.head = snakeNextHead;
                 food = new Food(width, height);
                 score += 100;
-                scoreDiv.innerHTML = "Score: " + score;			    
-				clearScore();
+                scoreDiv.innerHTML = "Score: " + score + highScore;			    
+
+                var HighScore = localStorage.getItem('highScore');                
+                
+				if (score > HighScore) {
+  				highScore = parseInt(score);
+                localStorage.setItem('highScore', highScore);
+				}
+	
+                
+                clearScore();
 				tree._root.children.push(new Node(score));                
                 tree.traverseDF(function(node) {
                   if(node.data != 'root'){
@@ -474,7 +459,3 @@ if (alerted != 'yes') {
 
     setInterval(gameLoop, 100);
 }());
-
-</script>
-</body>
-</html>
