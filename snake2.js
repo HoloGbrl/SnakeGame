@@ -1,3 +1,26 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Snake</title>
+    <style>
+        #rank-list {
+            float: right;
+            background-color: #dedede;
+            font-weight: bold;
+        }
+        #storage-clear {
+            float: right;
+        }
+    </style>
+</head>
+<body>
+<div id="rank-list">Score history</div>
+<button id="storage-clear">Clear Score</button>
+<div id="score">Score: </div>
+<canvas width="400" height="400"></canvas>
+<script>
+
 function Node(data) {
     this.data = data;
     this.parent = null;
@@ -124,7 +147,21 @@ if (alerted != 'yes') {
         rankList.innerHTML = "Score history";
     }
 
-    ();
+    (function loadTopFiveScores() {
+        function Pair(key, value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        var rankList = document.getElementById("rank-list");
+
+        for(var i = 0; i < length; i++) {
+            var div = document.createElement("div");
+            div.innerHTML = tree._root.children[i] = tree;
+            rankList.appendChild(div);
+
+
+        }})();
 
     function Queue() {
         var that = this;
@@ -340,6 +377,7 @@ if (alerted != 'yes') {
     }
 
     function restartGame() {
+		alert("Game Over! Your score was " + score + ". Press 'OK' to try again!")
         document.location.reload();
 
     }
@@ -436,3 +474,7 @@ if (alerted != 'yes') {
 
     setInterval(gameLoop, 100);
 }());
+
+</script>
+</body>
+</html>
