@@ -1,17 +1,16 @@
-
 function Node(data) {
     this.data = data;
     this.parent = null;
     this.children = [];
 }
- 
+
 function Tree(data) {
     var node = new Node(data);
     this._root = node;
 }
- 
+
 Tree.prototype.traverseDF = function(callback) {
- 
+
     // this is a recurse and immediately-invoking function
     (function recurse(currentNode) {
         // step 2
@@ -19,36 +18,36 @@ Tree.prototype.traverseDF = function(callback) {
             // step 3
             recurse(currentNode.children[i]);
         }
- 
+
         // step 4
         callback(currentNode);
- 
+
         // step 1
     })(this._root);
- 
+
 };
- 
+
 Tree.prototype.traverseBF = function(callback) {
     var queue = new Queue();
- 
+
     queue.enqueue(this._root);
- 
+
     currentTree = queue.dequeue();
- 
+
     while(currentTree){
         for (var i = 0, length = currentTree.children.length; i < length; i++) {
             queue.enqueue(currentTree.children[i]);
         }
- 
+
         callback(currentTree);
         currentTree = queue.dequeue();
     }
 };
- 
+
 Tree.prototype.contains = function(callback, traversal) {
     traversal.call(this, callback);
 };
- 
+
 Tree.prototype.add = function(data, toData, traversal) {
     var child = new Node(data),
         parent = null,
@@ -57,9 +56,9 @@ Tree.prototype.add = function(data, toData, traversal) {
                 parent = node;
             }
         };
- 
+
     this.contains(callback, traversal);
- 
+
     if (parent) {
         parent.children.push(child);
         child.parent = parent;
@@ -67,24 +66,24 @@ Tree.prototype.add = function(data, toData, traversal) {
         throw new Error('Cannot add node to a non-existent parent.');
     }
 };
- 
+
 Tree.prototype.remove = function(data, fromData, traversal) {
     var tree = this,
         parent = null,
         childToRemove = null,
         index;
- 
+
     var callback = function(node) {
         if (node.data === fromData) {
             parent = node;
         }
     };
- 
+
     this.contains(callback, traversal);
- 
+
     if (parent) {
         index = findIndex(parent.children, data);
- 
+
         if (index === undefined) {
             throw new Error('Node to remove does not exist.');
         } else {
@@ -93,19 +92,19 @@ Tree.prototype.remove = function(data, fromData, traversal) {
     } else {
         throw new Error('Parent does not exist.');
     }
- 
+
     return childToRemove;
 };
- 
+
 function findIndex(arr, data) {
     var index;
- 
+
     for (var i = 0; i < arr.length; i++) {
         if (arr[i].data === data) {
             index = i;
         }
     }
- 
+
     return index;
 }
 var alerted = sessionStorage.getItem('alerted') || '';
@@ -343,19 +342,21 @@ if (alerted != 'yes') {
 
 
     function saveScore(score){
-         /*tree._root.children.push(new Node('name'));
-       tree._root.children[1].parent = tree;
-        tree._root.children[0].children.push(new Node(score));
-        tree._root.children[0].children[0].parent = tree._root.children[0];
+        /*tree._root.children.push(new Node('name'));
+      tree._root.children[1].parent = tree;
+       tree._root.children[0].children.push(new Node(score));
+       tree._root.children[0].children[0].parent = tree._root.children[0];
 
-        tree.traverseDF(function(node) {
-            console.log(node.data)
-        });*/
+       tree.traverseDF(function(node) {
+           console.log(node.data)
+       });*/
+
 
     }
 
     function restartGame() {
-		alert("Game Over! Your score was " + score + ". Press 'OK' to try again!")
+
+        alert("Game Over! Press ok to try again!");
         document.location.reload();
 
     }
@@ -374,9 +375,13 @@ if (alerted != 'yes') {
     var scoreDiv = document.getElementById("score");
     scoreDiv.style.fontWeight = "bold";
     scoreDiv.innerHTML = "Score: " + score;
-	
-	var rankList = document.getElementById("rank-list");
-                     
+
+    var highDiv = document.getElementById("highScore") || "0";
+    highDiv.style.fontWeight = "bold";
+    highDiv.innerHTML = "High Score: " + highScore;
+
+    var rankList = document.getElementById("rank-list");
+
     window.onkeydown = function (ev) {
         switch (ev.keyCode) {
             case 37:
@@ -402,6 +407,7 @@ if (alerted != 'yes') {
         for (var i = 0; i < snakeBody.length(); i++) {
             var elem = snakeBody.elementAt(i);
             if (elem.x === nextHead.x && elem.y === nextHead.y) {
+                //      alert("GAME OVER");
                 saveScore(score);
                 restartGame();
             }
@@ -425,27 +431,17 @@ if (alerted != 'yes') {
                 snake.head = snakeNextHead;
                 food = new Food(width, height);
                 score += 100;
-                scoreDiv.innerHTML = "Score: " + score;			    
-
-                var HighScoreDiv = localStorage.getItem('HighScore') || 0;
-  
-                
-				if (score > HighScore) {
-  				HighScore = parseInt(score);
-                localStorage.setItem('HighScore', HighScoreDiv);
-				}
-                HighScoreDiv.innerHTML = "High Score: " + HighScore;
-	
-                
+                scoreDiv.innerHTML = "Score: " + score;
                 clearScore();
-				tree._root.children.push(new Node(score));                
+                tree._root.children.push(new Node(score));
                 tree.traverseDF(function(node) {
-                  if(node.data != 'root'){
-				   var div = document.createElement("div");
-                   div.innerHTML = node.data;
-                   rankList.appendChild(div);
-                }
-                  });
+                    if(node.data != 'root'){
+                        var div = document.createElement("div");
+                        div.innerHTML = node.data;
+
+                        rankList.appendChild(div);
+                    }
+                });
 
                 break;
             }
