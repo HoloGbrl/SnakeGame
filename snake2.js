@@ -124,21 +124,7 @@ if (alerted != 'yes') {
         rankList.innerHTML = "Score history";
     }
 
-    (function loadTopFiveScores() {
-        function Pair(key, value) {
-            this.key = key;
-            this.value = value;
-        }
-
-        var rankList = document.getElementById("rank-list");
-
-        for(var i = 0; i < length; i++) {
-            var div = document.createElement("div");
-            div.innerHTML = tree._root.children[i] = tree;
-            rankList.appendChild(div);
-
-
-        }})();
+    ();
 
     function Queue() {
         var that = this;
