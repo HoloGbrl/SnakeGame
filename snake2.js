@@ -180,6 +180,8 @@ if (alerted != 'yes') {
         }
     }
 
+
+
     function Coords(x, y) {
         var that = this;
         that.x = x * 10;
@@ -355,8 +357,7 @@ if (alerted != 'yes') {
     }
 
     function restartGame() {
-
-        alert("Game Over! Press ok to try again!");
+        alert("Game Over! Press OK to try again!");
         document.location.reload();
 
     }
@@ -376,11 +377,11 @@ if (alerted != 'yes') {
     scoreDiv.style.fontWeight = "bold";
     scoreDiv.innerHTML = "Score: " + score;
 
-    var highDiv = document.getElementById("highScore") || "0";
-    highDiv.style.fontWeight = "bold";
-    highDiv.innerHTML = "High Score: " + highScore;
-
     var rankList = document.getElementById("rank-list");
+
+    var highScore = document.getElementById("highScore");
+    highScore.style.fontWeight = "bold";
+
 
     window.onkeydown = function (ev) {
         switch (ev.keyCode) {
@@ -407,7 +408,6 @@ if (alerted != 'yes') {
         for (var i = 0; i < snakeBody.length(); i++) {
             var elem = snakeBody.elementAt(i);
             if (elem.x === nextHead.x && elem.y === nextHead.y) {
-                //      alert("GAME OVER");
                 saveScore(score);
                 restartGame();
             }
@@ -440,11 +440,15 @@ if (alerted != 'yes') {
                         div.innerHTML = node.data;
 
                         rankList.appendChild(div);
+
+                        var highS = localStorage.getItem('highS') || '0';
+                        if(node.data > highS) {
+                            localStorage.setItem('highS', 'node.data');
+                        }
+
                     }
-                    if(div > highDiv){
-                        highDiv = div;
-                        highDiv.innerHTML = "High Score: " + highDiv;
-                    }
+                    highScore.innerHTML = "High Score: " + highS;
+
                 });
 
                 break;
